@@ -38,10 +38,6 @@
         <!--生成全部表tableName设为%-->
         <table
                 tableName="pms_brand"
-                enableCountByExample="false"
-                enableDeleteByExample="false"
-                enableSelectByExample="false"
-                enableUpdateByExample="false"
         >
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
