@@ -1,12 +1,15 @@
 package web.document01.mbg.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import web.document01.mbg.model.PmsBrand;
 import web.document01.mbg.model.PmsBrandExample;
 
-@Component
+@Mapper
+@Repository
 public interface PmsBrandMapper {
     int countByExample(PmsBrandExample example);
 

@@ -15,7 +15,6 @@ public class PmsBrandServiceImpl implements PmsBrandService {
     @Autowired
     private PmsBrandMapper brandMapper;
 
-
     @Override
     public List<PmsBrand> listAllBrand() {
         return brandMapper.selectByExample(new PmsBrandExample());
