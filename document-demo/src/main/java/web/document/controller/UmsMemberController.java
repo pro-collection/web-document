@@ -16,13 +16,15 @@ public class UmsMemberController {
     private UmsMemberService memberService;
 
     @ApiOperation("获取验证码")
-    @GetMapping("/getAuthCode")
+    @RequestMapping(value = "getAuthCode", method = RequestMethod.GET)
+    @ResponseBody
     public CommonResult getAuthCode(@RequestParam String telephone) {
         return memberService.generateAuthCode(telephone);
     }
 
     @ApiOperation("判断验证码是否正确")
-    @PostMapping("/verifyAuthCode")
+    @RequestMapping(value = "verifyAuthCode", method = RequestMethod.GET)
+    @ResponseBody
     public CommonResult updatePassword(
             @RequestParam String telephone,
             @RequestParam String authCode
