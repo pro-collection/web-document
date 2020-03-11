@@ -1,4 +1,10 @@
 package web.document.dao;
 
-public class UmsAdminRoleRelationDao {
+import org.apache.ibatis.annotations.Param;
+import web.document.mbg.model.UmsPermission;
+
+import java.util.List;
+
+public interface UmsAdminRoleRelationDao {
+    List<UmsPermission> getPermissionList(@Param("adminId") Long adminId);
 }
