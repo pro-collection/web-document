@@ -14,6 +14,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UmsAdminService umsAdminService;
 
-
-
 }
