@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import web.document.component.JwtAuthenticationTokenFilter;
 import web.document.component.RestAuthenticationEntryPoint;
 import web.document.component.RestfulAccessDeniedHandler;
+import web.document.dto.AdminUserDetails;
 import web.document.mbg.model.UmsAdmin;
 import web.document.mbg.model.UmsPermission;
 import web.document.service.UmsAdminService;
