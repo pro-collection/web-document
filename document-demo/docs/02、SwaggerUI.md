@@ -47,7 +47,128 @@ Swagger使用的注解及其说明：
     - value：说明参数的意思
     - defaultValue：参数的默认值
     
-    
+### 使用实例
+作用在controller上面：                
+```java
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+@Controller
+@Api(tags="订单模块") // Swagger-UI 描述在类上面，可以做分组。
+public class OrderController {
+
+        @RequestMapping(method = RequestMethod.GET, value = "/order/orderInfo/{orderId:.+}")
+        @ResponseBody
+        @ApiOperation(value = "获取订单") // 让Swagger-UI解析这个接口。
+        public OrderInfo getOrderInfo(String orderId) {
+                return new OrderInfo();
+        }
+        
+        @RequestMapping(method = RequestMethod.DELETE, value = "/order/delOrder.do")
+        @ResponseBody
+        @ApiOperation(value = "删除订单")
+        public BaseResponse delOrder(String orderId) {
+                return new BaseResponse();
+        }
+        
+        @RequestMapping(method = RequestMethod.POST, value = "/order/queryOrderList.do")
+        @ResponseBody
+        @ApiOperation(value = "查询订单列表")
+        public QueryOrderListResponse getOrderInfo(@RequestBody QueryOrderListRequest req) {
+                return new QueryOrderListResponse();
+        }
+}
+```
+
+作用在DTO上：                        
+```java
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Date;
+
+@ApiModel(description = "订单实体")
+public class OrderInfo {
+
+        @ApiModelProperty(value = "订单号", example = "201701011234", notes = "订单的编号")
+        private String orderNo;
+        
+        @ApiModelProperty("创建时间")
+        private Date createTime;
+        
+        @ApiModelProperty("中介公司编码")
+        private String agencyCode;
+
+        @ApiModelProperty("中介公司名称")
+        private String agencyName;
+
+        @ApiModelProperty("门店ID")
+        private String storeId;
+
+        @ApiModelProperty("门店名称")
+        private String storeName;
+
+        public String getOrderNo() {
+                return orderNo;
+        }
+
+        public void setOrderNo(String orderNo) {
+                this.orderNo = orderNo;
+        }
+
+        public Date getCreateTime() {
+                return createTime;
+        }
+
+        public void setCreateTime(Date createTime) {
+                this.createTime = createTime;
+        }
+
+        public String getAgencyCode() {
+                return agencyCode;
+        }
+
+        public void setAgencyCode(String agencyCode) {
+                this.agencyCode = agencyCode;
+        }
+
+        public String getAgencyName() {
+                return agencyName;
+        }
+
+        public void setAgencyName(String agencyName) {
+                this.agencyName = agencyName;
+        }
+
+        public String getStoreId() {
+                return storeId;
+        }
+
+        public void setStoreId(String storeId) {
+                this.storeId = storeId;
+        }
+
+        public String getStoreName() {
+                return storeName;
+        }
+
+        public void setStoreName(String storeName) {
+                this.storeName = storeName;
+        }
+
+}
+```
+
+
+### 本文档中的示例
+- [PmsBrandController.java](../src/main/java/web/document/controller/PmsBrandController.java)
+- [PmsBrand.java](../src/main/java/web/document/mbg/model/PmsBrand.java)
           
 
 ### 参考文档
