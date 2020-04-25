@@ -27,7 +27,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("SwaggerUI 演示")
                 .description("mall-yanle-web")
-                .contact("macro")
+                .contact("YanLeWeb")
                 .version("1.0")
                 .build();
     }
