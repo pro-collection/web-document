@@ -19,6 +19,7 @@ mybatis:
     - classpath*:com/**/mapper/*.xml
 ```
 
-[generatorConfig.xml](../src/main/resources/generatorConfig.xml)                
+[generatorConfig.xml](../src/main/resources/generatorConfig.xml)                                        
+然后执行这个文件就可以了[Generator.java](../src/main/java/web/document/mbg/Generator.java)
 
 
