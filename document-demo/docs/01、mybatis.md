@@ -19,4 +19,6 @@ mybatis:
     - classpath*:com/**/mapper/*.xml
 ```
 
-[mybatis generator](./docs/src/main/resources/generatorConfig.xml)
+[generatorConfig.xml](./src/main/resources/generatorConfig.xml)                
+
+
