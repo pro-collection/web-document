@@ -19,7 +19,10 @@ mybatis:
     - classpath*:com/**/mapper/*.xml
 ```
 
+自动生成代码 generator:                           
 [generatorConfig.xml](../src/main/resources/generatorConfig.xml)                                        
 然后执行这个文件就可以了[Generator.java](../src/main/java/web/document/mbg/Generator.java)
 
+mybatis 在 Java 中的配置：                            
+[MyBatisConfig.java](../src/main/java/web/document/config/MyBatisConfig.java)
 
