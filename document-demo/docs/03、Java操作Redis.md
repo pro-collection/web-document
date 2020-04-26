@@ -24,7 +24,78 @@ application.yml
         max-idle: 8 # 连接池中的最大空闲连接
         min-idle: 0 # 连接池中的最小空闲连接
     timeout: 3000ms # 连接超时时间（毫秒）
+
+# 自定义redis key
+redis:
+  key:
+    prefix:
+      authCode: "portal:authCode:"
+    expire:
+      authCode: 120 # 验证码超期时间
 ```
+
+### 使用实例
+service 层：                  
+```java
+public interface UmsMemberService {
+    /* 生成验证码 */
+    CommonResult generateAuthCode(String phone);
+
+    /* 判断验证码和手机是否匹配 */
+    CommonResult verifyAuthCode(String phone, String authCode);
+}
+```
+
+service impl:                   
+```java
+@Service
+public class UmsMemberServiceImpl implements UmsMemberService {
+    @Autowired
+    private RedisService redisService;
+
+    @Value("${redis.key.prefix.authCode}")
+    private String REDIS_KEY_PREFIX_AUTH_CODE;
+    @Value("${redis.key.expire.authCode}")
+    private Long REDIS_KEY_EXPIRE_AUTH_CODE;
+
+    @Override
+    public CommonResult generateAuthCode(String phone) {
+        StringBuilder sb = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < 6; i++) {
+            sb.append(random.nextInt(10));
+        }
+
+        // 验证码绑定手机， 并且存储到redis
+        redisService.set(REDIS_KEY_PREFIX_AUTH_CODE + phone, sb.toString());
+        redisService.expire(REDIS_KEY_PREFIX_AUTH_CODE + phone, REDIS_KEY_EXPIRE_AUTH_CODE);
+
+        return CommonResult.success(sb.toString(), "获取验证码成功");
+    }
+
+    @Override
+    /* 验证验证码 */
+    public CommonResult verifyAuthCode(String phone, String authCode) {
+        if (StringUtil.isNullOrEmpty(authCode)) {
+            return CommonResult.failed("请输入验证码");
+        }
+
+        String realAuthCode = redisService.get(REDIS_KEY_PREFIX_AUTH_CODE + phone);
+        boolean result = authCode.equals(realAuthCode);
+        if (result) {
+            return CommonResult.success(null, "验证码校验成功");
+        } else {
+            return CommonResult.failed("验证码不正确");
+        }
+    }
+}
+```
+
+
+### 常用api总结
+
+
+### redis做接口缓存
 
 
 
