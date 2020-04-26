@@ -1,9 +1,10 @@
-package document.run.service;
+package document.run.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import document.run.mbg.mapper.PmsBrandMapper;
 import document.run.mbg.model.PmsBrand;
 import document.run.mbg.model.PmsBrandExample;
+import document.run.service.PmsBrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
