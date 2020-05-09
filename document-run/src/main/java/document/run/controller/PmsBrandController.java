@@ -1,6 +1,5 @@
 package document.run.controller;
 
-import com.sun.tools.corba.se.idl.InterfaceGen;
 import document.run.common.api.CommonPage;
 import document.run.common.api.CommonResult;
 import document.run.mbg.model.PmsBrand;
