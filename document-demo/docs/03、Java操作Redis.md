@@ -93,6 +93,50 @@ public class UmsMemberServiceImpl implements UmsMemberService {
 
 
 ### 常用api总结
+#### 物种基础的操作模式方法
+
+stringRedisTemplate.opsForValue();　　//操作字符串
+
+stringRedisTemplate.opsForHash();　　 //操作hash
+
+stringRedisTemplate.opsForList();　　 //操作list
+
+stringRedisTemplate.opsForSet();　　  //操作set
+
+stringRedisTemplate.opsForZSet();　 　//操作有序set
+
+获取数据库中值是String类型的所有数据
+` ValueOperations<String, String> ops = stringRedisTemplate.opsForValue();`
+
+```
+ops.set(key,value); //向redis中插入数据。因为这个没有设置过期时间所以是永久存储的。
+
+ops.set(key,value,time,timeUtil); //向redis中插入数据。第三个参数是一个long型的时间。最后一个参数是时间的单位。比如我上面demo中就是设置的50秒过期。
+
+ops.get(key);//获取redis中指定key 的value值。
+
+注意下上面的是针对字符串类型value的操作。如果是别的值类型操作是有一点点不同的，例如set：
+
+stringRedisTemplate.opsForSet().add("keySet", "1","2","3"); //向指定key中存放set集合
+
+stringRedisTemplate.opsForSet().isMember("keySet", "1"); //根据key查看集合中是否存在指定数据
+
+stringRedisTemplate.opsForSet().members("keySet"); //根据key获取set集合
+
+stringRedisTemplate还有一些别的方法：
+
+stringRedisTemplate.expire(key,1000 , TimeUnit.MILLISECONDS); //设置过期时间
+
+stringRedisTemplate.hasKey("isHas"); //检查key是否存在，返回boolean值
+
+stringRedisTemplate.delete(key); //根据key删除记录
+
+stringRedisTemplate.getExpire(key)； //根据key获取过期时间
+
+stringRedisTemplate.getExpire(key,TimeUnit.SECONDS); //根据key获取过期时间并换算成指定
+```
+
+
 
 
 ### redis做接口缓存
