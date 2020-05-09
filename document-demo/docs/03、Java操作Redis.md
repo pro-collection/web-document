@@ -294,3 +294,5 @@ public ResultVO list(){
 - [RedisTemplate和StringRedisTemplate的区别](https://blog.csdn.net/yifanSJ/article/details/79513179)
 - [如何使用StringRedisTemplate操作Redis详解](https://segmentfault.com/a/1190000019952021)
 - [Java 使用Redis做数据缓存](https://blog.csdn.net/linzhiqqq/article/details/81487477)
+- [SpringBoot使用Redis缓存 + @Cacheable, @CachePut, @CacheEvict注解使用](https://blog.csdn.net/guyue35/article/details/84992649)
+- [玩转Spring Cache --- @Cacheable/@CachePut/@CacheEvict注解的原理深度剖析和使用](https://blog.csdn.net/f641385712/article/details/94570960)
