@@ -233,9 +233,57 @@ public ResultVO list(){
 里面的 #result 表示返回的对象，那么这个注解的意思时  它会进行缓存除非状态码不为 0 ，所以只有状态码为 0 时才会缓存
 
 
+#### 更新缓存的问题
+`@CacheEvict`  这个注解会在方法执行后去清除注解里指定 key 的缓存
+`@CachePut`   这个注解跟 Cacheable 一样会把返回的内容做缓存，但是不一样的是，它不会在方法执行前去判断是否执行方法，而是永远都执行方法，然后更新掉
 
 
+注意 key 要对应好，我们上面的注解给的 key 是 123，那么我们要清除缓存时这个 key 要一样
+```
+    @CacheEvict(key = "123")
+    public ModelAndView save(@Valid ProductForm form,
+                             BindingResult bindingResult,
+                             Map<String,Object> map){
+        if(bindingResult.hasErrors()){
+            map.put("msg",bindingResult.getFieldError().getDefaultMessage());
+            map.put("url","/sell/seller/product/index");
+            return new ModelAndView("common/error",map);
+        }
+        ProductInfo productInfo = new ProductInfo();
+        try {
+            // 如果productId 为空是新增
+            if(!StringUtils.isEmpty(form.getProductId())){
+                productInfo = productInfoService.findOne(form.getProductId());
+            }else{
+                form.setProductId(KeyUtil.genUniqueKey());
+            }
+            BeanUtils.copyProperties(form,productInfo);
+            productInfoService.save(productInfo);
+        }catch (SellException e){
+            map.put("msg",e.getMessage());
+            map.put("url","/sell/seller/product/index");
+            return new ModelAndView("common/error",map);
+        }
+        map.put("url","/sell/seller/product/list");
+        return new ModelAndView("common/success",map);
+    }
+```
 
+再举个 `CachePut` 的例子
+```
+    @Override
+    @Cacheable(key = "111")
+    public ProductInfo findOne(String productId) {
+        System.out.println("【进入查询数据库商品信息】");
+        return repository.findOne(productId);
+    }
+ 
+    @Override
+    @CachePut(key = "111")
+    public ProductInfo save(ProductInfo productInfo) {
+        return repository.save(productInfo);
+    }
+```
 
 
 
