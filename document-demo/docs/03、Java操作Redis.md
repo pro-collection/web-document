@@ -137,9 +137,22 @@ stringRedisTemplate.getExpire(key,TimeUnit.SECONDS); //根据key获取过期时�
 ```
 
 
-
-
 ### redis做接口缓存
+添加依赖：               
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-data-redis</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-cache</artifactId>
+</dependency>
+```
+
+
+
+
 
 
 
@@ -148,3 +161,4 @@ stringRedisTemplate.getExpire(key,TimeUnit.SECONDS); //根据key获取过期时�
 - [使用StringRedisTemplate进行redis连接操作](https://blog.csdn.net/baomw/article/details/89186501)
 - [RedisTemplate和StringRedisTemplate的区别](https://blog.csdn.net/yifanSJ/article/details/79513179)
 - [如何使用StringRedisTemplate操作Redis详解](https://segmentfault.com/a/1190000019952021)
+- [Java 使用Redis做数据缓存](https://blog.csdn.net/linzhiqqq/article/details/81487477)
