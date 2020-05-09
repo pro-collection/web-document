@@ -138,7 +138,7 @@ stringRedisTemplate.getExpire(key,TimeUnit.SECONDS); //根据key获取过期时�
 
 
 ### redis做接口缓存
-添加依赖：               
+#### 添加依赖：               
 ```xml
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -149,6 +149,90 @@ stringRedisTemplate.getExpire(key,TimeUnit.SECONDS); //根据key获取过期时�
     <artifactId>spring-boot-starter-cache</artifactId>
 </dependency>
 ```
+
+#### 序列化
+往Redis里做的缓存的单位并不是单纯的一个对象，或者一个字符串这么简单，而是缓存了某个接口的全部返回内容。                          
+例如我有一个获取商品列表的接口，那么我的 Redis 缓存的就是这个接口返回的数据，所以我们是对接口进行操作的
+但是我们要先把返回的内容进行序列化，必须是可以序列化的对象才能被缓存到 Redis 里
+```java
+@Data
+public class ProductInfoVO implements Serializable {
+    private static final long serialVersionUID = 4754730660459228000L;
+    @JsonProperty("id")
+    private String productId;
+
+    @JsonProperty("name")
+    private String productName;
+
+    @JsonProperty("price")
+    private BigDecimal productPrice;
+
+    @JsonProperty("description")
+    private String productDescription;
+
+    @JsonProperty("icon")
+    private String productIcon;
+}
+```
+
+#### 接口缓存
+接口上加 cache 的注解，他就会自动地把这个接口的返回结果缓存到 Redis 里，下次再访问这个接口的时候它就会先去 Redis 里查一下有没有要的数据，有的话就不再进入这个接口，而是直接从 Redis 里获取那些数据，提高了效率，也节约了资源
+```java
+@RestController
+@RequestMapping("/buyer/product")
+public class BuyerProductController {
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @GetMapping("/list")
+    @Cacheable(cacheNames = "prodcut", key = "123")
+    public ResultVO list() {
+        // 查询所有上架的产品
+        List<ProductInfo> productInfoList = productService.findUpAll();
+
+        // 获取商品类目
+        List<Integer> categoryTypeList = productInfoList.stream()
+                .map(ProductInfo::getCategoryType)
+                .collect(Collectors.toList());
+
+        // 拿到商品类目对应的商品种类信息
+        List<ProductCategory> productCategoryList = categoryService.findByCategoryTypeIn(categoryTypeList);
+
+        List<ProductVO> productVOList = new ArrayList<>();
+        for (ProductCategory productCategory : productCategoryList) {
+            ProductVO productVO = new ProductVO();
+            productVO.setCategoryName(productCategory.getCategoryName());
+            productVO.setCategoryType(productCategory.getCategoryType());
+
+            List<ProductInfoVO> productInfoVOList = new ArrayList<>();
+            for (ProductInfo productInfo: productInfoList) {
+                if (productInfo.getCategoryType().equals(productCategory.getCategoryType())) {
+                    ProductInfoVO productInfoVO = new ProductInfoVO();
+                    BeanUtils.copyProperties(productInfo, productInfoVO);
+                    productInfoVOList.add(productInfoVO);
+                }
+            }
+            productVO.setProductInfoVOList(productInfoVOList);
+            productVOList.add(productVO);
+        }
+        return ResultVOUtil.success(productVOList);
+    }
+}
+```
+
+此外我们还可以加一个过虑，就是当这个接口返回正确时才缓存，不正确时不缓存，看一下我们上面的 ResultVO 类，有一个属性叫错误码，返回正确时为 0，那么我们可以使用 unless 这个注解项，如下
+```java
+@Cacheable(cacheNames = "product", key = "123",unless = "#result.getCode() != 0")
+public ResultVO list(){
+    ...
+}
+```
+里面的 #result 表示返回的对象，那么这个注解的意思时  它会进行缓存除非状态码不为 0 ，所以只有状态码为 0 时才会缓存
+
+
 
 
 
