@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface UmsAdminService {
     /* 根据用户名获取后台管理员 */
-    UmsAdmin getAdminByUserName(String username);
+    UmsAdmin getAdminByUsername(String username);
 
     /* 注册功能 */
     UmsAdmin register(UmsAdmin umsAdminParam);
