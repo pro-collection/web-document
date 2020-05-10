@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @MapperScan({
         "document.run.mbg.mapper",
-        "document.rum.dao"
+        "document.run.dao"
 })
 public class MyBatisConfig {
 
