@@ -90,10 +90,10 @@
             <version>4.1.45.Final</version>
         </dependency>
         <!--SpringSecurity依赖配置-->
-        <!--<dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>-->
+        </dependency>
         <!--Hutool Java工具包-->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -101,11 +101,11 @@
             <version>4.5.18</version>
         </dependency>
         <!--JWT(Json Web Token)登录支持-->
-        <!--<dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.0</version>
-        </dependency>-->
+        </dependency>
     </dependencies>
 
     <build>
