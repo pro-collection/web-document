@@ -89,7 +89,7 @@ public class JwtTokenUtil {
 
     /* 验证 token 是否失效 */
     public boolean validateToken(String token , UserDetails userDetails) {
-        String username = getUserNameFormToken(token);
+        String username = getUserNameFromToken(token);
         return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
