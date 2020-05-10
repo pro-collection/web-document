@@ -1,9 +1,17 @@
 package document.run.common.utils;
 
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * JwtToken生成的工具类
@@ -23,4 +31,95 @@ public class JwtTokenUtil {
     private String secret;
     @Value("${jwt.expiration}")
     private Long expiration;
+
+    /**
+     * 根据负责生成JWT的token
+     */
+    private String generateToken(Map<String, Object> claims) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setExpiration(generateExpirationDate())
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
+
+    /**
+     * 从token 中获取 JWT 中的负载
+     *
+     * @param token token
+     * @return Claims
+     */
+    private Claims getClaimsFormToken(String token) {
+        Claims claims = null;
+        try {
+            claims = Jwts.parser()
+                    .setSigningKey(secret)
+                    .parseClaimsJws(token)
+                    .getBody();
+
+        } catch (Exception e) {
+            logger.info("JWT 格式校验失败： {}", token);
+        }
+        return claims;
+    }
+
+    /**
+     * 生成过期时间
+     *
+     * @return 过期时间
+     */
+    private Date generateExpirationDate() {
+        return new Date(System.currentTimeMillis() + expiration * 1000);
+    }
+
+    /* 从 token 中获取登录用户名 */
+    private String getUserNameFormToken(String token) {
+        String username;
+        try {
+            Claims claims = getClaimsFormToken(token);
+            username = claims.getSubject();
+        } catch (Exception e) {
+            username = null;
+        }
+        return username;
+    }
+
+    /* 验证 token 是否失效 */
+    public boolean validateToken(String token , UserDetails userDetails) {
+        String username = getUserNameFormToken(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    /* 判断 token 的时间是否失效 */
+    private boolean isTokenExpired(String token) {
+        Date expiredDate = getExpireDateFormToken(token);
+        return expiredDate.before(new Date());
+    }
+
+    /* 从token中获取过期时间 */
+    public Date getExpireDateFormToken(String token) {
+        Claims claims = getClaimsFormToken(token);
+        return claims.getExpiration();
+    }
+
+    /* 根据用户信息生成 token */
+    public String generateToken(UserDetails userDetails) {
+        Map<String , Object> claims = new HashMap<>();
+        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
+
+    /* 判断 token 是否可以被刷新 */
+    public boolean canRefresh(String token) {
+        return !isTokenExpired(token);
+    }
+
+    /* 刷新 token */
+    public String refreshToken(String token) {
+        Claims claims = getClaimsFormToken(token);
+        claims.put(CLAIM_KEY_CREATED, new Date());
+        return generateToken(claims);
+    }
 }
