@@ -2,7 +2,6 @@ package document.run.dao;
 
 import document.run.mbg.model.UmsPermission;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
