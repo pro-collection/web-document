@@ -76,7 +76,7 @@ public class JwtTokenUtil {
     }
 
     /* 从 token 中获取登录用户名 */
-    private String getUserNameFormToken(String token) {
+    public String getUserNameFromToken(String token) {
         String username;
         try {
             Claims claims = getClaimsFormToken(token);
